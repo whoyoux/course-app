@@ -28,6 +28,20 @@ const navData = [
 export default function Header() {
     const { isOpen, setIsOpen, ref } = useOutsideClick(false);
 
+    const sideNavHeight = () => {
+        document.documentElement.style.setProperty(
+            '--app-height',
+            `${window.innerHeight}px`
+        );
+    };
+
+    useEffect(() => {
+        document.addEventListener('resize', sideNavHeight);
+        return () => {
+            document.removeEventListener('resize', sideNavHeight);
+        };
+    }, []);
+
     return (
         <>
             <header className="mx-auto p-5 md:px-0 md:w-10/12 lg:w-9/12 xl:w-3/4 flex items-center justify-between select-none">
@@ -63,9 +77,9 @@ export default function Header() {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
-                <div className="absolute top-0 left-0 w-screen h-screen z-10 bg-black opacity-80"></div>
+                <div className="absolute top-0 left-0 w-screen inset-0 z-10 bg-black opacity-80"></div>
                 <div
-                    className="absolute top-0 left-0 bg-secondary h-screen w-3/4 sm:hidden rounded-r-lg flex flex-col z-20"
+                    className="absolute top-0 left-0 bg-secondary inset-0 w-3/4 sm:hidden rounded-r-lg flex flex-col z-20"
                     ref={ref}
                 >
                     <div className="flex flex-row items-center justify-between w-9/12 mx-auto mt-10">
