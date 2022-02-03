@@ -24,15 +24,20 @@ const Home: NextPage = () => {
             <main className="mx-auto px-5 md:p-0 md:w-10/12 lg:w-9/12 xl:w-3/4">
                 <h1>Course App 🚀🚀🚀</h1>
 
-                <button className="button" onClick={() => routerPush('signin')}>
-                    Sign in
-                </button>
-                <button
-                    className="button-secondary"
-                    onClick={() => routerPush('signup')}
-                >
-                    Sign up
-                </button>
+                <div className="flex justify-between gap-4">
+                    <button
+                        className="button"
+                        onClick={() => routerPush('signin')}
+                    >
+                        Sign in
+                    </button>
+                    <button
+                        className="button-secondary"
+                        onClick={() => routerPush('signup')}
+                    >
+                        Sign up
+                    </button>
+                </div>
             </main>
         </div>
     );
