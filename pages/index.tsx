@@ -1,8 +1,15 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
+
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
+    const router = useRouter();
+
+    const routerPush = async (href: string) => {
+        await router.push(`/${href}`);
+    };
+
     return (
         <div>
             <Head>
@@ -17,8 +24,15 @@ const Home: NextPage = () => {
             <main className="mx-auto px-5 md:p-0 md:w-10/12 lg:w-9/12 xl:w-3/4">
                 <h1>Course App 🚀🚀🚀</h1>
 
-                <button className="button">Sign in</button>
-                <button className="button-secondary">Sign up</button>
+                <button className="button" onClick={() => routerPush('signin')}>
+                    Sign in
+                </button>
+                <button
+                    className="button-secondary"
+                    onClick={() => routerPush('signup')}
+                >
+                    Sign up
+                </button>
             </main>
         </div>
     );
