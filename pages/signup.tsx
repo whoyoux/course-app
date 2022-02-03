@@ -28,7 +28,7 @@ const SignUp: NextPage = () => {
                             type="email"
                             id="email"
                             placeholder="john@example.com"
-                            className="text-sm rounded p-2.5 w-full"
+                            className="input"
                             required
                         />
                     </div>
@@ -44,7 +44,7 @@ const SignUp: NextPage = () => {
                             type="password"
                             id="pass1"
                             placeholder="Password"
-                            className="text-sm rounded p-2.5 w-full"
+                            className="input"
                             required
                         />
                     </div>
@@ -60,7 +60,7 @@ const SignUp: NextPage = () => {
                             type="password"
                             id="pass2"
                             placeholder="Password again"
-                            className="text-sm rounded p-2.5 w-full"
+                            className="input"
                             required
                         />
                     </div>

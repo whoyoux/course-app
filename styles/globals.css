@@ -23,4 +23,8 @@
     .bg-secondary {
         @apply bg-[#27272A];
     }
+
+    .input {
+        @apply text-sm rounded p-2.5 w-full dark:bg-[#3B3B3B];
+    }
 }
