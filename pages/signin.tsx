@@ -1,7 +1,22 @@
 import type { NextPage } from 'next';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
 import Head from 'next/head';
 
+type Inputs = {
+    email: string;
+    password: string;
+};
+
 const SignIn: NextPage = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<Inputs>();
+
+    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
     return (
         <>
             <Head>
@@ -14,7 +29,10 @@ const SignIn: NextPage = () => {
             </Head>
 
             <main className="mx-auto px-5 md:p-0 md:w-10/12 lg:w-9/12 xl:w-3/4">
-                <form className="w-90 flex flex-col mt-2 md:mt-10 mx-auto sm:w-3/4 md:w-3/5 xl:w-1/2">
+                <form
+                    className="w-90 flex flex-col mt-2 md:mt-10 mx-auto sm:w-3/4 md:w-3/5 xl:w-1/2"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
                     <h1 className="text-2xl">Sign in</h1>
                     <div className="mt-4 mb-2">
                         <label
@@ -28,7 +46,11 @@ const SignIn: NextPage = () => {
                             id="email"
                             placeholder="john@example.com"
                             className="input"
-                            required
+                            {...register('email', { required: true })}
+                        />
+                        <InputError
+                            error={errors.email}
+                            defaultText="Email is required"
                         />
                     </div>
 
@@ -44,7 +66,11 @@ const SignIn: NextPage = () => {
                             id="pass1"
                             placeholder="Password"
                             className="input"
-                            required
+                            {...register('password', { required: true })}
+                        />
+                        <InputError
+                            error={errors.password}
+                            defaultText="Password is required"
                         />
                     </div>
 
@@ -57,6 +83,22 @@ const SignIn: NextPage = () => {
             </main>
         </>
     );
+};
+
+const InputError = ({
+    error,
+    defaultText
+}: {
+    error: any;
+    defaultText: string;
+}) => {
+    if (error)
+        return (
+            <span className="text-red-400 text-sm">
+                {error.message ? error.message : `${defaultText}`}
+            </span>
+        );
+    return <></>;
 };
 
 export default SignIn;

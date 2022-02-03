@@ -1,8 +1,29 @@
 import type { NextPage } from 'next';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
 import Head from 'next/head';
 import Link from 'next/link';
 
+type Inputs = {
+    email: string;
+    password1: string;
+    password2: string;
+};
+
+const PASSWORD_ERROR: string =
+    'Minimum eight, at least one uppercase letter, one lowercase letter, one number and one special character';
+const PASSWORD_REGEX: RegExp =
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i;
+
 const SignUp: NextPage = () => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<Inputs>();
+
+    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
     return (
         <>
             <Head>
@@ -15,7 +36,10 @@ const SignUp: NextPage = () => {
             </Head>
 
             <main className="mx-auto px-5 md:p-0 md:w-10/12 lg:w-9/12 xl:w-3/4">
-                <form className="w-90 flex flex-col mt-4 md:mt-10 mx-auto sm:w-3/4 md:w-3/5 xl:w-1/2">
+                <form
+                    className="w-90 flex flex-col mt-4 md:mt-10 mx-auto sm:w-3/4 md:w-3/5 xl:w-1/2"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
                     <h1 className="text-2xl">Create account</h1>
                     <div className="mt-4 mb-2">
                         <label
@@ -29,7 +53,11 @@ const SignUp: NextPage = () => {
                             id="email"
                             placeholder="john@example.com"
                             className="input"
-                            required
+                            {...register('email', { required: true })}
+                        />
+                        <InputError
+                            error={errors.email}
+                            defaultText="Email is required"
                         />
                     </div>
 
@@ -40,12 +68,23 @@ const SignUp: NextPage = () => {
                         >
                             Your password
                         </label>
+
                         <input
                             type="password"
                             id="pass1"
                             placeholder="Password"
                             className="input"
-                            required
+                            {...register('password1', {
+                                required: true,
+                                pattern: {
+                                    value: PASSWORD_REGEX,
+                                    message: PASSWORD_ERROR
+                                }
+                            })}
+                        />
+                        <InputError
+                            error={errors.password1}
+                            defaultText="Password is required"
                         />
                     </div>
 
@@ -61,7 +100,17 @@ const SignUp: NextPage = () => {
                             id="pass2"
                             placeholder="Password again"
                             className="input"
-                            required
+                            {...register('password2', {
+                                required: true,
+                                pattern: {
+                                    value: PASSWORD_REGEX,
+                                    message: PASSWORD_ERROR
+                                }
+                            })}
+                        />
+                        <InputError
+                            error={errors.password2}
+                            defaultText="Password is required"
                         />
                     </div>
 
@@ -90,6 +139,22 @@ const SignUp: NextPage = () => {
             </main>
         </>
     );
+};
+
+const InputError = ({
+    error,
+    defaultText
+}: {
+    error: any;
+    defaultText: string;
+}) => {
+    if (error)
+        return (
+            <span className="text-red-400 text-sm">
+                {error.message ? error.message : `${defaultText}`}
+            </span>
+        );
+    return <></>;
 };
 
 export default SignUp;
