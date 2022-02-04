@@ -1,5 +1,12 @@
 import { initializeApp, getApp, FirebaseOptions } from 'firebase/app';
-import { getFirestore, collection } from 'firebase/firestore';
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    query,
+    where,
+    doc
+} from 'firebase/firestore';
 import {
     getAuth,
     setPersistence,
@@ -32,10 +39,25 @@ const app = createFirebaseApp(firebaseConfig);
 const firestore = getFirestore(app);
 
 const usersCollection = collection(firestore, `users`);
+const coursesCollection = collection(firestore, `courses`);
 
 if (isBrowser && !getAnalytics(app)) initializeAnalytics(app);
 
 const auth = getAuth(app);
 setPersistence(auth, browserSessionPersistence);
 
-export { firestore, auth, usersCollection };
+//Get all courses by user id
+
+const getUserCourses = async (userUid: string) => {
+    const userRef = doc(firestore, 'users', userUid);
+
+    const q = query(coursesCollection, where('author', '==', userRef));
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) return querySnapshot;
+
+    return [];
+};
+
+export { firestore, auth, usersCollection, getUserCourses };

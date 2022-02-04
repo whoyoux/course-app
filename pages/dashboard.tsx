@@ -3,12 +3,15 @@ import Head from 'next/head';
 
 import nookies from 'nookies';
 import { firebaseAdmin } from '../utils/firebaseAdmin';
+import { getUserCourses } from '../utils/firebase';
 
 import { useAuth } from '../context/AuthContext';
 
-const Dashboard: NextPage = () => {
+const Dashboard: NextPage = ({ courses }: any) => {
     const loggedUser = useAuth();
-    console.log(loggedUser);
+
+    courses = JSON.parse(courses);
+
     return (
         <div>
             <Head>
@@ -22,6 +25,42 @@ const Dashboard: NextPage = () => {
 
             <main className="mx-auto px-5 md:p-0 md:w-10/12 lg:w-9/12 xl:w-3/4">
                 <h1>Protected dashboard</h1>
+                <h2 className="my-4">My courses</h2>
+                {courses != [] &&
+                    courses.map((course: any) => {
+                        return (
+                            <div
+                                key={course.name}
+                                className="p-5 border b-2 rounded"
+                            >
+                                <h1>{course.name}</h1>
+                                <h2>{course.description}</h2>
+                                <h2 className="mt-2">Videos</h2>
+                                {course.videos.map((video: any) => {
+                                    return (
+                                        <div key={video.title}>
+                                            {video.title}
+                                            <video
+                                                width="320"
+                                                height="240"
+                                                controls
+                                                poster={video.thumbnail}
+                                                className="rounded"
+                                            >
+                                                <source
+                                                    src={video.videoURL}
+                                                    width="320"
+                                                    height="240"
+                                                />
+                                                Your browser does not support
+                                                the video tag.
+                                            </video>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
             </main>
         </div>
     );
@@ -35,10 +74,15 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
         // the user is authenticated!
         const { uid, email } = token;
 
-        // FETCH STUFF HERE!! 🚀
+        const coursesSnap = await getUserCourses(uid);
+
+        let courses: any = [];
+        coursesSnap.forEach((doc) => {
+            courses.push(doc.data());
+        });
 
         return {
-            props: { message: `Your email is ${email} and your UID is ${uid}.` }
+            props: { courses: JSON.stringify(courses) }
         };
     } catch (err) {
         ctx.res.writeHead(302, { Location: '/' });
