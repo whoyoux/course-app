@@ -38,12 +38,13 @@ export default function Header() {
             return;
         }
 
-        document.body.style.overflowY = isOpen ? 'hidden' : 'scroll';
-        document.body.style.position = isOpen ? 'relative' : 'static';
+        document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+        // document.body.style.overflowY = isOpen ? 'hidden' : 'scroll';
+        // document.body.style.position = isOpen ? 'relative' : 'static';
 
         return () => {
-            document.body.style.overflowY = 'scroll';
-            document.body.style.position = 'static';
+            document.body.style.overflowY = 'auto';
+            // document.body.style.position = 'static';
         };
     }, [isOpen]);
 
