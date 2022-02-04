@@ -42,10 +42,14 @@ export default function Header() {
         document.body.style.overflow = isOpen ? 'hidden' : 'auto';
         // document.body.style.overflowY = isOpen ? 'hidden' : 'scroll';
         document.body.style.position = isOpen ? 'fixed' : 'static';
+        document.body.style.width = isOpen ? '100%' : 'auto';
+        document.body.style.height = isOpen ? '100%' : 'auto';
 
         return () => {
             document.body.style.overflow = 'auto';
             document.body.style.position = 'static';
+            document.body.style.width = 'auto';
+            document.body.style.height = 'auto';
         };
     }, [isOpen]);
 
@@ -90,9 +94,12 @@ export default function Header() {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
             >
-                <div className="absolute top-0 left-0 w-screen inset-0 z-10 bg-black opacity-80"></div>
+                {/* <div className="absolute top-0 left-0 w-screen inset-0 z-10 bg-black opacity-80"></div> */}
                 <div
-                    className="absolute top-0 left-0 bg-secondary inset-0 w-3/4 sm:hidden rounded-r-lg flex flex-col z-20"
+                    className={`absolute top-0 left-0 w-screen z-10 bg-black opacity-80 h-full`}
+                ></div>
+                <div
+                    className={`absolute top-0 left-0 bg-secondary  w-3/4 sm:hidden rounded-r-lg flex flex-col z-20 h-full`}
                     ref={ref}
                 >
                     <div className="flex flex-row items-center justify-between w-9/12 mx-auto mt-10">
