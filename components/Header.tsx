@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -180,13 +179,13 @@ export default function Header() {
                         );
                     })}
                     <button
-                        className="button-secondary px-2.5 py-2"
+                        className="button-secondary w-3/4 mx-auto px-2.5 py-2"
                         onClick={() => redirectSideNav('/signin')}
                     >
                         Sign in
                     </button>
                     <button
-                        className="button px-2.5 py-2"
+                        className="button w-3/4 mx-auto px-2.5 py-2"
                         onClick={() => redirectSideNav('/signup')}
                     >
                         Sign in
