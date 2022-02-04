@@ -29,23 +29,37 @@ const navData = [
 ];
 
 export default function Header() {
+    const isBrowser = typeof window !== 'undefined';
     const { isOpen, setIsOpen, ref } = useOutsideClick(false);
 
-    function useImperativeDisableScroll({ element, disabled }: any) {
-        useEffect(() => {
-            if (!element) {
-                return;
-            }
+    useEffect(() => {
+        if (!isBrowser) return;
+        if (!document.body && typeof window === 'undefined') {
+            return;
+        }
 
-            element.style.overflowY = disabled ? 'hidden' : 'scroll';
+        document.body.style.overflowY = isOpen ? 'hidden' : 'scroll';
 
-            return () => {
-                element.style.overflowY = 'scroll';
-            };
-        }, [disabled]);
-    }
+        return () => {
+            document.body.style.overflowY = 'scroll';
+        };
+    }, [isOpen]);
 
-    useImperativeDisableScroll({ element: document.body, disabled: isOpen });
+    // function useImperativeDisableScroll({ element, disabled }: any) {
+    //     useEffect(() => {
+    //         if (!element && typeof window === 'undefined') {
+    //             return;
+    //         }
+
+    //         element.style.overflowY = disabled ? 'hidden' : 'scroll';
+
+    //         return () => {
+    //             element.style.overflowY = 'scroll';
+    //         };
+    //     }, [disabled]);
+    // }
+
+    // useImperativeDisableScroll({ element: document.body, disabled: isOpen });
 
     return (
         <>
