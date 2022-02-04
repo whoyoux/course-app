@@ -34,51 +34,25 @@ const Dashboard: NextPage = ({ courses }: any) => {
                                     key={course.name}
                                     className="p-5 border b-2 border-white/30 rounded relative"
                                 >
-                                    <video
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={course.videos[0].thumbnail}
                                         width="320"
                                         height="240"
-                                        controls
-                                        poster={course.videos[0].thumbnail}
-                                        className="rounded"
-                                    >
-                                        <source
-                                            src={course.videos[0].videoURL}
-                                            width="320"
-                                            height="240"
-                                        />
-                                        Your browser does not support the video
-                                        tag.
-                                    </video>
+                                        alt={course.videos[0].title}
+                                    />
                                     <h1 className="font-medium mt-4 mb-1 cursor-pointer hover:underline">
                                         {course.name}
                                     </h1>
-                                    <h2>{course.description}</h2>
+                                    <h2 className="text-white/90">
+                                        {course.description}
+                                    </h2>
+                                    <h3 className="text-white/80">
+                                        Videos count: {course.videos.length}
+                                    </h3>
                                     <button className="button bg-red-600 px-2 py-1.5 absolute bottom-5 right-5">
                                         Remove
                                     </button>
-                                    {/* <h2 className="mt-2">Videos</h2>
-                                {course.videos.map((video: any) => {
-                                    return (
-                                        <div key={video.title}>
-                                            {video.title}
-                                            <video
-                                                width="320"
-                                                height="240"
-                                                controls
-                                                poster={video.thumbnail}
-                                                className="rounded"
-                                            >
-                                                <source
-                                                    src={video.videoURL}
-                                                    width="320"
-                                                    height="240"
-                                                />
-                                                Your browser does not support
-                                                the video tag.
-                                            </video>
-                                        </div>
-                                    );
-                                })} */}
                                 </div>
                             );
                         })}
