@@ -32,6 +32,7 @@ export default function Header() {
     const isBrowser = typeof window !== 'undefined';
     const { isOpen, setIsOpen, ref } = useOutsideClick(false);
 
+    //TODO: Prevent scroll while sidenav is open
     useEffect(() => {
         if (!isBrowser) return;
         if (!document.body && typeof window === 'undefined') {
@@ -40,29 +41,13 @@ export default function Header() {
 
         document.body.style.overflow = isOpen ? 'hidden' : 'auto';
         // document.body.style.overflowY = isOpen ? 'hidden' : 'scroll';
-        // document.body.style.position = isOpen ? 'relative' : 'static';
+        document.body.style.position = isOpen ? 'fixed' : 'static';
 
         return () => {
-            document.body.style.overflowY = 'auto';
-            // document.body.style.position = 'static';
+            document.body.style.overflow = 'auto';
+            document.body.style.position = 'static';
         };
     }, [isOpen]);
-
-    // function useImperativeDisableScroll({ element, disabled }: any) {
-    //     useEffect(() => {
-    //         if (!element && typeof window === 'undefined') {
-    //             return;
-    //         }
-
-    //         element.style.overflowY = disabled ? 'hidden' : 'scroll';
-
-    //         return () => {
-    //             element.style.overflowY = 'scroll';
-    //         };
-    //     }, [disabled]);
-    // }
-
-    // useImperativeDisableScroll({ element: document.body, disabled: isOpen });
 
     return (
         <>
