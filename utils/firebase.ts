@@ -1,6 +1,10 @@
 import { initializeApp, getApp, FirebaseOptions } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getFirestore, collection } from 'firebase/firestore';
+import {
+    getAuth,
+    setPersistence,
+    browserSessionPersistence
+} from 'firebase/auth';
 import { getAnalytics, initializeAnalytics } from 'firebase/analytics';
 
 const firebaseConfig: FirebaseOptions = {
@@ -13,19 +17,25 @@ const firebaseConfig: FirebaseOptions = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
+const isBrowser = typeof window !== 'undefined';
+
 function createFirebaseApp(config: FirebaseOptions) {
     try {
         return getApp();
     } catch {
-        return initializeApp(config);
+        const app = initializeApp(config);
+        return app;
     }
 }
 
 const app = createFirebaseApp(firebaseConfig);
 const firestore = getFirestore(app);
 
-if (!getAnalytics(app)) initializeAnalytics(app);
+const usersCollection = collection(firestore, `users`);
+
+if (isBrowser && !getAnalytics(app)) initializeAnalytics(app);
 
 const auth = getAuth(app);
+setPersistence(auth, browserSessionPersistence);
 
-export { firestore, auth };
+export { firestore, auth, usersCollection };

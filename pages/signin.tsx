@@ -1,5 +1,9 @@
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '../utils/firebase';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
 
@@ -13,13 +17,25 @@ type Inputs = {
 };
 
 const SignIn: NextPage = () => {
+    const router = useRouter();
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm<Inputs>();
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+    const [signInWithEmailAndPassword, user, loading, error] =
+        useSignInWithEmailAndPassword(auth);
+
+    const onSubmit: SubmitHandler<Inputs> = (data) => {
+        signInWithEmailAndPassword(data.email, data.password);
+
+        if (error) {
+            console.log(error);
+            return;
+        }
+        router.push('/');
+    };
 
     const [passwordShown, setPasswordShown] = useState<boolean>(false);
 

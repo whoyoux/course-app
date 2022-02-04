@@ -1,17 +1,30 @@
-import type { NextPage } from 'next';
+import type { NextPage, GetServerSidePropsContext } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+
+import {
+    createUserWithEmailAndPassword,
+    updateProfile,
+    sendEmailVerification
+} from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
+import { auth, usersCollection } from '../utils/firebase';
 
 import Head from 'next/head';
 import Link from 'next/link';
 
 import { BiShow, BiHide } from 'react-icons/bi';
 
+const DEFAULT_PROFILE_PICTURE_URL =
+    process.env.NEXT_PUBLIC_DEFAULT_PROFILE_PICTURE_URL;
+
 type Inputs = {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
+    photoURL: string;
 };
 
 const PASSWORD_ERROR: string =
@@ -20,13 +33,41 @@ const PASSWORD_REGEX: RegExp =
     /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/i;
 
 const SignUp: NextPage = () => {
+    const router = useRouter();
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm<Inputs>();
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+    // const [createUserWithEmailAndPassword, user, loading, error] =
+    //     useCreateUserWithEmailAndPassword(auth, {
+    //         sendEmailVerification: true
+    //     });
+
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        await createUserWithEmailAndPassword(auth, data.email, data.password)
+            .then(async (userCred) => {
+                console.log(userCred.user);
+
+                await updateProfile(userCred.user, {
+                    photoURL: data.photoURL || DEFAULT_PROFILE_PICTURE_URL
+                });
+
+                const userRef = doc(usersCollection, userCred.user.uid);
+
+                await setDoc(userRef, {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: userCred.user.email
+                });
+
+                await sendEmailVerification(userCred.user);
+
+                router.push('/');
+            })
+            .catch((err) => console.log(err));
+    };
 
     const [passwordShown, setPasswordShown] = useState<boolean>(false);
 
@@ -70,8 +111,8 @@ const SignUp: NextPage = () => {
                                 {...register('firstName', {
                                     required: true,
                                     minLength: {
-                                        value: 4,
-                                        message: 'Minimum 4 character length'
+                                        value: 3,
+                                        message: 'Minimum 3 character length'
                                     }
                                 })}
                             />
@@ -95,8 +136,8 @@ const SignUp: NextPage = () => {
                                 {...register('lastName', {
                                     required: true,
                                     minLength: {
-                                        value: 4,
-                                        message: 'Minimum 4 character length'
+                                        value: 3,
+                                        message: 'Minimum 3 character length'
                                     }
                                 })}
                             />
@@ -188,6 +229,7 @@ const SignUp: NextPage = () => {
                             id="photoURL"
                             placeholder="URL to image or leave blank"
                             className="input"
+                            {...register('photoURL', { maxLength: 100 })}
                         />
                     </div>
 
@@ -213,37 +255,6 @@ const SignUp: NextPage = () => {
                         value="Create account"
                     />
                 </form>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
             </main>
         </>
     );

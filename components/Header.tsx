@@ -1,12 +1,19 @@
-import Link from 'next/link';
 import { useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { signOut } from 'firebase/auth';
+import { auth } from '../utils/firebase';
+
 import { Transition } from '@headlessui/react';
 
 import { FaHamburger } from 'react-icons/fa';
-import { AiOutlineClose } from 'react-icons/ai';
+import { FiLogOut } from 'react-icons/fi';
+import { AiOutlineClose, AiOutlineLoading } from 'react-icons/ai';
 
 import useOutsideClick from '../hooks/outsideClick';
-import { useRouter } from 'next/router';
 
 const navData = [
     {
@@ -14,18 +21,6 @@ const navData = [
         name: 'Main1',
         href: '/',
         label: 'Main'
-    },
-    {
-        isCta: false,
-        name: 'SignIn',
-        href: '/signin',
-        label: 'Sign in'
-    },
-    {
-        isCta: true,
-        name: 'SignUp',
-        href: '/signup',
-        label: 'Sign up'
     }
 ];
 
@@ -35,7 +30,8 @@ export default function Header() {
     const isBrowser = typeof window !== 'undefined';
     const { isOpen, setIsOpen, ref } = useOutsideClick(false);
 
-    //TODO: Prevent scroll while sidenav is open
+    const [user, loading, error] = useAuthState(auth);
+
     useEffect(() => {
         if (!isBrowser) return;
         if (!document.body && typeof window === 'undefined') {
@@ -54,6 +50,7 @@ export default function Header() {
             document.body.style.width = 'auto';
             document.body.style.height = 'auto';
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 
     const redirectSideNav = (href: string) => {
@@ -90,6 +87,55 @@ export default function Header() {
                             </Link>
                         );
                     })}
+
+                    {loading && (
+                        <AiOutlineLoading className="animate-spin text-xl" />
+                    )}
+
+                    {!user && !loading && (
+                        <div className="flex items-center justify-between gap-4">
+                            <Link href="/signin" passHref>
+                                <li className="cursor-pointer hover:underline text-black/90 dark:text-white/90 dark:hover:text-white hover:text-black transition">
+                                    Sign in
+                                </li>
+                            </Link>
+
+                            <Link href="/signup" passHref>
+                                <button className="button px-2.5 py-2">
+                                    Sign up
+                                </button>
+                            </Link>
+                        </div>
+                    )}
+
+                    {user && !loading && (
+                        <>
+                            <Link href="/dashboard" passHref>
+                                {/* <button className="button-secondary px-2.5 py-2">
+                                    
+                                </button> */}
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src={
+                                        (user.photoURL as string) ||
+                                        process.env
+                                            .NEXT_PUBLIC_DEFAULT_PROFILE_PICTURE_URL
+                                    }
+                                    alt="Profile picture"
+                                    className="w-11 h-11 rounded-full cursor-pointer"
+                                />
+                            </Link>
+                            <button
+                                className="button px-2.5 py-2 h-11 w-11 grid place-content-center"
+                                onClick={() => {
+                                    signOut(auth);
+                                    router.push('/');
+                                }}
+                            >
+                                <FiLogOut className="text-xl" />
+                            </button>
+                        </>
+                    )}
                 </ul>
             </header>
 
@@ -122,31 +168,29 @@ export default function Header() {
 
                     {navData.map((item) => {
                         return (
-                            <>
-                                {item.isCta ? (
-                                    <button
-                                        className="button w-3/4 mx-auto"
-                                        onClick={() =>
-                                            redirectSideNav(item.href)
-                                        }
-                                        key={item.name}
-                                    >
-                                        {item.label}
-                                    </button>
-                                ) : (
-                                    <button
-                                        className="button-secondary w-3/4 mx-auto"
-                                        onClick={() =>
-                                            redirectSideNav(item.href)
-                                        }
-                                        key={item.name}
-                                    >
-                                        {item.label}
-                                    </button>
-                                )}
-                            </>
+                            <button
+                                className={`${
+                                    item.isCta ? 'button' : 'button-secondary'
+                                } w-3/4 mx-auto`}
+                                onClick={() => redirectSideNav(item.href)}
+                                key={item.name}
+                            >
+                                {item.label}
+                            </button>
                         );
                     })}
+                    <button
+                        className="button-secondary px-2.5 py-2"
+                        onClick={() => redirectSideNav('/signin')}
+                    >
+                        Sign in
+                    </button>
+                    <button
+                        className="button px-2.5 py-2"
+                        onClick={() => redirectSideNav('/signup')}
+                    >
+                        Sign in
+                    </button>
                 </div>
             </Transition>
         </>
