@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 
 import { FaHamburger } from 'react-icons/fa';
@@ -29,6 +30,22 @@ const navData = [
 
 export default function Header() {
     const { isOpen, setIsOpen, ref } = useOutsideClick(false);
+
+    function useImperativeDisableScroll({ element, disabled }: any) {
+        useEffect(() => {
+            if (!element) {
+                return;
+            }
+
+            element.style.overflowY = disabled ? 'hidden' : 'scroll';
+
+            return () => {
+                element.style.overflowY = 'scroll';
+            };
+        }, [disabled]);
+    }
+
+    useImperativeDisableScroll({ element: document.body, disabled: isOpen });
 
     return (
         <>
