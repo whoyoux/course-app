@@ -26,16 +26,37 @@ const Dashboard: NextPage = ({ courses }: any) => {
             <main className="mx-auto px-5 md:p-0 md:w-10/12 lg:w-9/12 xl:w-3/4">
                 <h1>Protected dashboard</h1>
                 <h2 className="my-4">My courses</h2>
-                {courses != [] &&
-                    courses.map((course: any) => {
-                        return (
-                            <div
-                                key={course.name}
-                                className="p-5 border b-2 rounded"
-                            >
-                                <h1>{course.name}</h1>
-                                <h2>{course.description}</h2>
-                                <h2 className="mt-2">Videos</h2>
+                <div className="flex">
+                    {courses != [] &&
+                        courses.map((course: any) => {
+                            return (
+                                <div
+                                    key={course.name}
+                                    className="p-5 border b-2 border-white/30 rounded relative"
+                                >
+                                    <video
+                                        width="320"
+                                        height="240"
+                                        controls
+                                        poster={course.videos[0].thumbnail}
+                                        className="rounded"
+                                    >
+                                        <source
+                                            src={course.videos[0].videoURL}
+                                            width="320"
+                                            height="240"
+                                        />
+                                        Your browser does not support the video
+                                        tag.
+                                    </video>
+                                    <h1 className="font-medium mt-4 mb-1 cursor-pointer hover:underline">
+                                        {course.name}
+                                    </h1>
+                                    <h2>{course.description}</h2>
+                                    <button className="button bg-red-600 px-2 py-1.5 absolute bottom-5 right-5">
+                                        Remove
+                                    </button>
+                                    {/* <h2 className="mt-2">Videos</h2>
                                 {course.videos.map((video: any) => {
                                     return (
                                         <div key={video.title}>
@@ -57,10 +78,11 @@ const Dashboard: NextPage = ({ courses }: any) => {
                                             </video>
                                         </div>
                                     );
-                                })}
-                            </div>
-                        );
-                    })}
+                                })} */}
+                                </div>
+                            );
+                        })}
+                </div>
             </main>
         </div>
     );
