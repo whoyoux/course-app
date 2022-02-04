@@ -149,7 +149,7 @@ export default function Header() {
             >
                 {/* <div className="absolute top-0 left-0 w-screen inset-0 z-10 bg-black opacity-80"></div> */}
                 <div
-                    className={`absolute top-0 left-0 w-screen z-10 bg-black opacity-80 h-full`}
+                    className={`absolute top-0 left-0 w-screen z-10 sm:hidden bg-black opacity-80 h-full`}
                 ></div>
                 <div
                     className={`absolute top-0 left-0 bg-secondary  w-3/4 sm:hidden rounded-r-lg flex flex-col z-20 h-full gap-4`}
