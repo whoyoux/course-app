@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useEffect } from 'react';
 import { Transition } from '@headlessui/react';
 
 import { FaHamburger } from 'react-icons/fa';
@@ -9,16 +8,19 @@ import useOutsideClick from '../hooks/outsideClick';
 
 const navData = [
     {
+        isCta: false,
         name: 'Main1',
         href: '/',
         label: 'Main'
     },
     {
+        isCta: false,
         name: 'SignIn',
         href: '/signin',
         label: 'Sign in'
     },
     {
+        isCta: true,
         name: 'SignUp',
         href: '/signup',
         label: 'Sign up'
@@ -27,20 +29,6 @@ const navData = [
 
 export default function Header() {
     const { isOpen, setIsOpen, ref } = useOutsideClick(false);
-
-    const sideNavHeight = () => {
-        document.documentElement.style.setProperty(
-            '--app-height',
-            `${window.innerHeight}px`
-        );
-    };
-
-    useEffect(() => {
-        document.addEventListener('resize', sideNavHeight);
-        return () => {
-            document.removeEventListener('resize', sideNavHeight);
-        };
-    }, []);
 
     return (
         <>
@@ -59,9 +47,15 @@ export default function Header() {
                     {navData.map((item) => {
                         return (
                             <Link href={item.href} passHref key={item.name}>
-                                <li className="cursor-pointer hover:underline text-black/90 dark:text-white/90 dark:hover:text-white hover:text-black transition">
-                                    {item.label}
-                                </li>
+                                {item.isCta ? (
+                                    <button className="button px-2.5 py-2">
+                                        {item.label}
+                                    </button>
+                                ) : (
+                                    <li className="cursor-pointer hover:underline text-black/90 dark:text-white/90 dark:hover:text-white hover:text-black transition">
+                                        {item.label}
+                                    </li>
+                                )}
                             </Link>
                         );
                     })}

@@ -1,7 +1,11 @@
 import type { NextPage } from 'next';
+import { useState } from 'react';
+
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import Head from 'next/head';
+
+import { BiShow, BiHide } from 'react-icons/bi';
 
 type Inputs = {
     email: string;
@@ -17,6 +21,12 @@ const SignIn: NextPage = () => {
 
     const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
+    const [passwordShown, setPasswordShown] = useState<boolean>(false);
+
+    const togglePasswordVisibility = () => {
+        setPasswordShown(passwordShown ? false : true);
+    };
+
     return (
         <>
             <Head>
@@ -30,7 +40,7 @@ const SignIn: NextPage = () => {
 
             <main className="mx-auto px-5 md:p-0 md:w-10/12 lg:w-9/12 xl:w-3/4">
                 <form
-                    className="w-90 flex flex-col mt-2 md:mt-10 mx-auto sm:w-3/4 md:w-3/5 xl:w-1/2"
+                    className="w-90 mx-auto flex flex-col mt-4 md:mt-10 sm:w-3/4 xl:w-3/5 2xl:w-1/2"
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <h1 className="text-2xl">Sign in</h1>
@@ -61,13 +71,30 @@ const SignIn: NextPage = () => {
                         >
                             Your password
                         </label>
-                        <input
-                            type="password"
-                            id="pass1"
-                            placeholder="Password"
-                            className="input"
-                            {...register('password', { required: true })}
-                        />
+                        <div className="relative select-none">
+                            <input
+                                type={passwordShown ? 'text' : 'password'}
+                                id="pass"
+                                placeholder="Password"
+                                className="input relative"
+                                {...register('password', {
+                                    required: true
+                                })}
+                            />
+                            <div className="absolute right-0 top-0 w-10 h-10 grid place-items-center cursor-pointer">
+                                {passwordShown ? (
+                                    <BiHide
+                                        size={25}
+                                        onClick={togglePasswordVisibility}
+                                    />
+                                ) : (
+                                    <BiShow
+                                        size={25}
+                                        onClick={togglePasswordVisibility}
+                                    />
+                                )}
+                            </div>
+                        </div>
                         <InputError
                             error={errors.password}
                             defaultText="Password is required"
@@ -76,7 +103,7 @@ const SignIn: NextPage = () => {
 
                     <input
                         type="submit"
-                        className="button my-2"
+                        className="button mt-5"
                         value="Sign in"
                     />
                 </form>
