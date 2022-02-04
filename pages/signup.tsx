@@ -153,7 +153,7 @@ const SignUp: NextPage = () => {
                                     }
                                 })}
                             />
-                            <div className="absolute right-0 top-0 w-10 h-10 grid place-items-center cursor-pointer">
+                            <div className="absolute right-0 top-0 w-10 h-10 grid place-items-center cursor-pointer touch-none">
                                 {passwordShown ? (
                                     <BiHide
                                         size={25}
