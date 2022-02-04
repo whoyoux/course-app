@@ -65,11 +65,28 @@ export default function Header() {
                         Courses
                     </h1>
                 </Link>
-                <FaHamburger
-                    size={24}
-                    className="sm:hidden cursor-pointer hover:text-[#3073F1]"
-                    onClick={() => setIsOpen(!isOpen)}
-                />
+                <div className="sm:hidden flex flex-row items-center justify-between gap-4">
+                    {user && !loading && (
+                        <Link href="/dashboard" passHref>
+                            {/*  eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={
+                                    (user.photoURL as string) ||
+                                    process.env
+                                        .NEXT_PUBLIC_DEFAULT_PROFILE_PICTURE_URL
+                                }
+                                alt="Profile picture"
+                                className="w-11 h-11 rounded-full cursor-pointer"
+                            />
+                        </Link>
+                    )}
+                    <FaHamburger
+                        size={24}
+                        className="cursor-pointer hover:text-[#3073F1]"
+                        onClick={() => setIsOpen(!isOpen)}
+                    />
+                </div>
+
                 <ul className="hidden sm:flex flex-row items-center justify-between gap-4 text-xl">
                     {navData.map((item) => {
                         return (
@@ -178,18 +195,47 @@ export default function Header() {
                             </button>
                         );
                     })}
-                    <button
-                        className="button-secondary w-3/4 mx-auto px-2.5 py-2"
-                        onClick={() => redirectSideNav('/signin')}
-                    >
-                        Sign in
-                    </button>
-                    <button
-                        className="button w-3/4 mx-auto px-2.5 py-2"
-                        onClick={() => redirectSideNav('/signup')}
-                    >
-                        Sign in
-                    </button>
+
+                    {loading && (
+                        <AiOutlineLoading className="animate-spin text-xl" />
+                    )}
+
+                    {!user && !loading && (
+                        <>
+                            <button
+                                className="button-secondary w-3/4 mx-auto px-2.5 py-2"
+                                onClick={() => redirectSideNav('/signin')}
+                            >
+                                Sign in
+                            </button>
+                            <button
+                                className="button w-3/4 mx-auto px-2.5 py-2"
+                                onClick={() => redirectSideNav('/signup')}
+                            >
+                                Sign up
+                            </button>
+                        </>
+                    )}
+
+                    {user && !loading && (
+                        <>
+                            <button
+                                className="button-secondary w-3/4 mx-auto px-2.5 py-2"
+                                onClick={() => redirectSideNav('/dashboard')}
+                            >
+                                Dashboard
+                            </button>
+                            <button
+                                className="button w-3/4 mx-auto px-2.5 py-2"
+                                onClick={() => {
+                                    signOut(auth);
+                                    redirectSideNav('/');
+                                }}
+                            >
+                                Log out
+                            </button>
+                        </>
+                    )}
                 </div>
             </Transition>
         </>

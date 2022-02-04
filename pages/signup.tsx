@@ -20,6 +20,7 @@ const DEFAULT_PROFILE_PICTURE_URL =
     process.env.NEXT_PUBLIC_DEFAULT_PROFILE_PICTURE_URL;
 
 //TODO: Add alerts when error shows after login/register
+//TODO: Get user IP
 
 type Inputs = {
     firstName: string;
