@@ -39,9 +39,11 @@ export default function Header() {
         }
 
         document.body.style.overflowY = isOpen ? 'hidden' : 'scroll';
+        document.body.style.position = isOpen ? 'relative' : 'static';
 
         return () => {
             document.body.style.overflowY = 'scroll';
+            document.body.style.position = 'static';
         };
     }, [isOpen]);
 
