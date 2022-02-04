@@ -6,6 +6,7 @@ import { FaHamburger } from 'react-icons/fa';
 import { AiOutlineClose } from 'react-icons/ai';
 
 import useOutsideClick from '../hooks/outsideClick';
+import { useRouter } from 'next/router';
 
 const navData = [
     {
@@ -29,6 +30,8 @@ const navData = [
 ];
 
 export default function Header() {
+    const router = useRouter();
+
     const isBrowser = typeof window !== 'undefined';
     const { isOpen, setIsOpen, ref } = useOutsideClick(false);
 
@@ -52,6 +55,11 @@ export default function Header() {
             document.body.style.height = 'auto';
         };
     }, [isOpen]);
+
+    const redirectSideNav = (href: string) => {
+        setIsOpen(false);
+        router.push(`/${href}`);
+    };
 
     return (
         <>
@@ -99,11 +107,11 @@ export default function Header() {
                     className={`absolute top-0 left-0 w-screen z-10 bg-black opacity-80 h-full`}
                 ></div>
                 <div
-                    className={`absolute top-0 left-0 bg-secondary  w-3/4 sm:hidden rounded-r-lg flex flex-col z-20 h-full`}
+                    className={`absolute top-0 left-0 bg-secondary  w-3/4 sm:hidden rounded-r-lg flex flex-col z-20 h-full gap-4`}
                     ref={ref}
                 >
-                    <div className="flex flex-row items-center justify-between w-9/12 mx-auto mt-10">
-                        <div className="text-2xl">Courses</div>
+                    <div className="flex flex-row items-center justify-between w-9/12 mx-auto mt-5">
+                        <div className="text-2xl font-medium">Courses</div>
                         <div className="text-2xl w-10 h-10 dark:bg-[#18181B] rounded grid place-content-center cursor-pointer">
                             <AiOutlineClose
                                 size={32}
@@ -111,6 +119,34 @@ export default function Header() {
                             />
                         </div>
                     </div>
+
+                    {navData.map((item) => {
+                        return (
+                            <>
+                                {item.isCta ? (
+                                    <button
+                                        className="button w-3/4 mx-auto"
+                                        onClick={() =>
+                                            redirectSideNav(item.href)
+                                        }
+                                        key={item.name}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="button-secondary w-3/4 mx-auto"
+                                        onClick={() =>
+                                            redirectSideNav(item.href)
+                                        }
+                                        key={item.name}
+                                    >
+                                        {item.label}
+                                    </button>
+                                )}
+                            </>
+                        );
+                    })}
                 </div>
             </Transition>
         </>
